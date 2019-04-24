@@ -6,56 +6,53 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TrainingZone.Core.Auth.Users;
+using TrainingZone.Core.Interfaces.Services;
 using TrainingZone.Models.Requests;
 
 namespace TrainingZone.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AccountController : ControllerBase
+    public class AuthController : ControllerBase
     {
         private readonly UserManager<User> _userManager;
+        private readonly IJwtFactory _jwtFactory;
 
-        public AccountController(UserManager<User> userManager)
+        public AuthController(UserManager<User> userManager, IJwtFactory jwtFactory)
         {
             _userManager = userManager;
+            _jwtFactory = jwtFactory;
         }
-        // GET: api/Account
+        // GET: api/Auth
         [HttpGet]
         public IEnumerable<string> Get()
         {
             return new string[] { "value1", "value2" };
         }
 
-        // GET: api/Account/5
+        // GET: api/Auth/5
         [HttpGet("{id}", Name = "Get")]
         public string Get(int id)
         {
             return "value";
         }
 
-        // POST: api/Account
+        // POST: api/Auth
         [HttpPost]
-        public async Task<ActionResult> Register([FromBody] RegisterRequest request)
+        public async Task<ActionResult> Login([FromBody] LoginRequest request)
         {
-            if (!ModelState.IsValid)
+            var user = await _userManager.FindByNameAsync(request.UserName);
+            if (user != null && await _userManager.CheckPasswordAsync(user, request.Password))
             {
-                return BadRequest(ModelState);
+                return Ok(await _jwtFactory.GenerateEncodedToken(user.Id, user.UserName));
             }
-
-            var user = new User
+            else
             {
-                UserName = request.UserName,
-                FirstName = request.FirstName,
-                LastName = request.LastName,
-                Email = request.Email
-            };
-
-            var result = await _userManager.CreateAsync(user, request.Password);
-            return result.Succeeded ? Ok(result) : (ActionResult)BadRequest(result.Errors);
+                return BadRequest();
+            }
         }
 
-        // PUT: api/Account/5
+        // PUT: api/Auth/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
         {

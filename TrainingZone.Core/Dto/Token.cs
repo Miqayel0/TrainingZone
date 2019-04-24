@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace TrainingZone.EFCore.Auth
+namespace TrainingZone.Core.Dto
 {
-    public sealed class Token
+    public class Token
     {
         public string Id { get; }
         public string AuthToken { get; }
