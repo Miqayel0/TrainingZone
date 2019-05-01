@@ -28,7 +28,7 @@ namespace TrainingZone.Controllers
         }
 
         // GET: api/Account/5
-        [HttpGet("{id}", Name = "Get")]
+        [HttpGet("{id}")]
         public string Get(int id)
         {
             return "value";

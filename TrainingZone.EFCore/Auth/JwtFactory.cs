@@ -6,10 +6,11 @@ using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using TrainingZone.Core.Dto;
+using TrainingZone.Core.Interfaces.Services;
 
 namespace TrainingZone.EFCore.Auth
 {
-    public class JwtFactory 
+    public class JwtFactory : IJwtFactory
     {
         private readonly JwtIssuerOptions _jwtOptions;
 
