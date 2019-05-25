@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using TrainingZone.Core.Auth.Users;
 
 namespace TrainingZone.Controllers
 {
@@ -13,10 +16,18 @@ namespace TrainingZone.Controllers
     public class ValuesController : ControllerBase
     {
         // GET api/values
-        [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        private readonly UserManager<User> _userManager;
+
+        public ValuesController(UserManager<User> userManager)
         {
-            return new string[] { "value1", "value2" };
+            _userManager = userManager;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<User>> Get()
+        {
+            var appUser = await _userManager.GetUserAsync(User);
+            return Ok(appUser);
         }
 
         // GET api/values/5
@@ -42,6 +53,7 @@ namespace TrainingZone.Controllers
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+
         }
     }
 }

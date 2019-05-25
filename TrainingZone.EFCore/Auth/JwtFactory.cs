@@ -26,21 +26,22 @@ namespace TrainingZone.EFCore.Auth
 
             var claims = new[]
             {
-                 new Claim(JwtRegisteredClaimNames.Sub, userName),
+                 new Claim(JwtRegisteredClaimNames.Sub, id),
+                 new Claim(JwtRegisteredClaimNames.UniqueName, userName),
                  new Claim(JwtRegisteredClaimNames.Jti, await _jwtOptions.JtiGenerator()),
                  new Claim(JwtRegisteredClaimNames.Iat, ToUnixEpochDate(_jwtOptions.IssuedAt).ToString(), ClaimValueTypes.Integer64),
                  identity.FindFirst(Helpers.Constants.Strings.JwtClaimIdentifiers.Rol),
                  identity.FindFirst(Helpers.Constants.Strings.JwtClaimIdentifiers.Id)
-             };
+            };
 
             // Create the JWT security token and encode it.
             var jwt = new JwtSecurityToken(
-                _jwtOptions.Issuer,
-                _jwtOptions.Audience,
-                claims,
-                _jwtOptions.NotBefore,
-                _jwtOptions.Expiration,
-                _jwtOptions.SigningCredentials);
+                  issuer: _jwtOptions.Issuer,
+                  audience: _jwtOptions.Audience,
+                  claims: claims,
+                  notBefore: _jwtOptions.NotBefore,
+                  expires: _jwtOptions.Expiration,
+                  signingCredentials: _jwtOptions.SigningCredentials);
 
             var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
             return new Token(identity.Claims.Single(c => c.Type == "id").Value, encodedJwt, (int)_jwtOptions.ValidFor.TotalSeconds);
