@@ -11,7 +11,7 @@ namespace TrainingZone.EFCore.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            builder.HasMany(u => u.Score).WithOne().HasForeignKey(s => new { s.SecondPlayerId, s.FirstPlayerId });
+            builder.HasMany(u => u.Score).WithOne(s => s.FirstPlayer);
         }
     }
 }

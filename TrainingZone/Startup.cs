@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using AutoMapper;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -17,7 +18,7 @@ using Swashbuckle.AspNetCore.Swagger;
 using TrainingZone.Core.Auth.Users;
 using TrainingZone.EFCore;
 using TrainingZone.EFCore.Auth;
-using TrainingZone.EFCore.Helpers;
+using TrainingZone.MapProfile;
 
 namespace TrainingZone
 {
@@ -94,6 +95,14 @@ namespace TrainingZone
             identityBuilder.AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1).AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>());
+
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new AppProfile());
+            });
+
+            var mapper = mappingConfig.CreateMapper();
+            services.AddSingleton(mapper);
 
             services.AddSwaggerGen(c =>
             {

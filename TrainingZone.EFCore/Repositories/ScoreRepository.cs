@@ -1,6 +1,7 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
 using TrainingZone.Core.Entities;
 using TrainingZone.Core.Interfaces;
@@ -16,14 +17,14 @@ namespace TrainingZone.EFCore.Repositories
             _context = context;
         }
 
-        public Task Add(Score score)
+        public async Task Add(Score score)
         {
-            throw new NotImplementedException();
+            await _context.Scores.AddAsync(score);
         }
 
-        public Task<IEnumerable<Score>> Get()
+        public async Task<IEnumerable<Score>> Get()
         {
-            throw new NotImplementedException();
+            return await _context.Scores.ToListAsync();
         }
 
         public Task<Score> GetById(int id)
@@ -31,9 +32,12 @@ namespace TrainingZone.EFCore.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Score>> GetByPlayerId(int playerId)
+        public async Task<IEnumerable<Score>> GetByPlayerId(string playerId)
         {
-            throw new NotImplementedException();
+            return await _context.Scores
+                .Where(s => s.FirstPlayerId == playerId)
+                .Include(s => s.SecondPlayer)
+                .ToListAsync();
         }
 
         public Task Remove(Score score)

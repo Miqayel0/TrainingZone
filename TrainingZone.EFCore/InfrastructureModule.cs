@@ -14,8 +14,8 @@ namespace TrainingZone.EFCore
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<JwtFactory>().As<IJwtFactory>().SingleInstance();
-            builder.RegisterType<ScoreRepository>().As<IScoreRepository>().SingleInstance();
-            builder.RegisterType<UnitOfWork>().As<IUnitOfWork>().SingleInstance();
+            builder.RegisterType<ScoreRepository>().As<IScoreRepository>().InstancePerLifetimeScope();
+            builder.RegisterType<UnitOfWork>().As<IUnitOfWork>().InstancePerLifetimeScope();
         }
     }
 }

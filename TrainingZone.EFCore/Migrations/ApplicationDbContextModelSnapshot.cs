@@ -15,7 +15,7 @@ namespace TrainingZone.EFCore.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.3-servicing-35854")
+                .HasAnnotation("ProductVersion", "2.2.4-servicing-10062")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -200,8 +200,6 @@ namespace TrainingZone.EFCore.Migrations
 
                     b.Property<string>("SecondPlayerId");
 
-                    b.Property<string>("UserId");
-
                     b.Property<int?>("Winner");
 
                     b.HasKey("Id");
@@ -210,9 +208,7 @@ namespace TrainingZone.EFCore.Migrations
 
                     b.HasIndex("SecondPlayerId");
 
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Score");
+                    b.ToTable("Scores");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -263,16 +259,13 @@ namespace TrainingZone.EFCore.Migrations
             modelBuilder.Entity("TrainingZone.Core.Entities.Score", b =>
                 {
                     b.HasOne("TrainingZone.Core.Auth.Users.User", "FirstPlayer")
-                        .WithMany()
-                        .HasForeignKey("FirstPlayerId");
+                        .WithMany("Score")
+                        .HasForeignKey("FirstPlayerId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("TrainingZone.Core.Auth.Users.User", "SecondPlayer")
                         .WithMany()
                         .HasForeignKey("SecondPlayerId");
-
-                    b.HasOne("TrainingZone.Core.Auth.Users.User")
-                        .WithMany("Score")
-                        .HasForeignKey("UserId");
                 });
 #pragma warning restore 612, 618
         }

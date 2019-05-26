@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace TrainingZone.EFCore.Migrations
 {
-    public partial class Initial : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -42,7 +42,10 @@ namespace TrainingZone.EFCore.Migrations
                     LockoutEnabled = table.Column<bool>(nullable: false),
                     AccessFailedCount = table.Column<int>(nullable: false),
                     FirstName = table.Column<string>(nullable: true),
-                    LastName = table.Column<string>(nullable: true)
+                    LastName = table.Column<string>(nullable: true),
+                    Victories = table.Column<int>(nullable: false),
+                    Losses = table.Column<int>(nullable: false),
+                    GamesCount = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -155,6 +158,33 @@ namespace TrainingZone.EFCore.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Scores",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    FirstPlayerId = table.Column<string>(nullable: true),
+                    SecondPlayerId = table.Column<string>(nullable: true),
+                    Winner = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Scores", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Scores_AspNetUsers_FirstPlayerId",
+                        column: x => x.FirstPlayerId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
+                        name: "FK_Scores_AspNetUsers_SecondPlayerId",
+                        column: x => x.SecondPlayerId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -193,6 +223,16 @@ namespace TrainingZone.EFCore.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Scores_FirstPlayerId",
+                table: "Scores",
+                column: "FirstPlayerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Scores_SecondPlayerId",
+                table: "Scores",
+                column: "SecondPlayerId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -211,6 +251,9 @@ namespace TrainingZone.EFCore.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "Scores");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

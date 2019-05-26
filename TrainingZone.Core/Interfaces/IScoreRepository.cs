@@ -10,7 +10,7 @@ namespace TrainingZone.Core.Interfaces
     {
         Task<IEnumerable<Score>> Get();
         Task<Score> GetById(int id);
-        Task<IEnumerable<Score>> GetByPlayerId(int playerId);
+        Task<IEnumerable<Score>> GetByPlayerId(string playerId);
         Task Add(Score score);
         Task Remove(Score score);
     }

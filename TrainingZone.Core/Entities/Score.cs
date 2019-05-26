@@ -10,11 +10,7 @@ namespace TrainingZone.Core.Entities
     public class Score
     {
         public int Id { get; set; }
-
-        //[ForeignKey(nameof(FirstPlayer))]
         public string FirstPlayerId { get; set; }
-
-        //[ForeignKey(nameof(FirstPlayer))]
         public string SecondPlayerId { get; set; }
 
         public virtual User FirstPlayer { get; set; }

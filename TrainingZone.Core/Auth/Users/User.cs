@@ -9,7 +9,7 @@ namespace TrainingZone.Core.Auth.Users
     {
         public User()
         {
-            Score = new HashSet<Score>();
+            Score = new HashSet<Score>();;
         }
 
         public string FirstName { get; set; }
