@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using TrainingZone.Core.Auth.Users;
 using TrainingZone.Core.Entities;
+using TrainingZone.Models.Requests;
 using TrainingZone.Models.Response;
 
 namespace TrainingZone.MapProfile
@@ -22,6 +23,15 @@ namespace TrainingZone.MapProfile
                             opt => opt.MapFrom(src => !Convert.ToBoolean(src.Winner)))
                             .IgnoreAllPropertiesWithAnInaccessibleSetter();
             CreateMap<User, ScoreResponse>().IgnoreAllPropertiesWithAnInaccessibleSetter();
+            CreateMap<User, LoginResponse>();
+            CreateMap<RegisterRequest, User>()
+                .ConstructUsing(u => new User
+                {
+                    UserName = u.UserName,
+                    Email = u.Email,
+                    FirstName = u.FirstName,
+                    LastName = u.LastName
+                }).ForMember(au => au.Id, opt => opt.Ignore()).IgnoreAllSourcePropertiesWithAnInaccessibleSetter();
         }
     }
 }

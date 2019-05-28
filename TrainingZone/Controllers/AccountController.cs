@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -15,10 +16,12 @@ namespace TrainingZone.Controllers
     public class AccountController : ControllerBase
     {
         private readonly UserManager<User> _userManager;
+        private readonly IMapper _mapper;
 
-        public AccountController(UserManager<User> userManager)
+        public AccountController(UserManager<User> userManager, IMapper mapper)
         {
             _userManager = userManager;
+            _mapper = mapper;
         }
         // GET: api/Account
         [HttpGet]
@@ -36,20 +39,14 @@ namespace TrainingZone.Controllers
 
         // POST: api/Account
         [HttpPost]
-        public async Task<ActionResult> Register([FromBody] RegisterRequest request)
+        public async Task<ActionResult> Register([FromForm] RegisterRequest request)
         {
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid || String.IsNullOrWhiteSpace(request.Password) || String.IsNullOrWhiteSpace(request.UserName))
             {
                 return BadRequest(ModelState);
             }
 
-            var user = new User
-            {
-                UserName = request.UserName,
-                FirstName = request.FirstName,
-                LastName = request.LastName,
-                Email = request.Email
-            };
+            var user = _mapper.Map<User>(request);
 
             var result = await _userManager.CreateAsync(user, request.Password);
             return result.Succeeded ? Ok(result) : (ActionResult)BadRequest(result.Errors);

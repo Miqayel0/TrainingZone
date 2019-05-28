@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TrainingZone.Core.Auth.Users;
 using TrainingZone.Core.Interfaces.Services;
 using TrainingZone.Models.Requests;
+using TrainingZone.Models.Response;
 
 namespace TrainingZone.Controllers
 {
@@ -17,11 +19,13 @@ namespace TrainingZone.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly IJwtFactory _jwtFactory;
+        private readonly IMapper _mapper;
 
-        public AuthController(UserManager<User> userManager, IJwtFactory jwtFactory)
+        public AuthController(UserManager<User> userManager, IJwtFactory jwtFactory, IMapper mapper)
         {
             _userManager = userManager;
             _jwtFactory = jwtFactory;
+            _mapper = mapper;
         }
         // GET: api/Auth
         [HttpGet]
@@ -39,16 +43,25 @@ namespace TrainingZone.Controllers
 
         // POST: api/Auth
         [HttpPost]
-        public async Task<ActionResult> Login([FromBody] LoginRequest request)
+        public async Task<ActionResult> Login([FromForm] LoginRequest request)
         {
+            if (String.IsNullOrWhiteSpace(request.Password) || String.IsNullOrWhiteSpace(request.UserName))
+            {
+                return BadRequest("Invalid UserName or Password");
+            }
+
             var user = await _userManager.FindByNameAsync(request.UserName);
             if (user != null && await _userManager.CheckPasswordAsync(user, request.Password))
             {
-                return Ok(await _jwtFactory.GenerateEncodedToken(user.Id, user.UserName));
+                var accessToken = await _jwtFactory.GenerateEncodedToken(user.Id, user.UserName);
+                var userRespose = _mapper.Map<LoginResponse>(user);
+                userRespose.AccessToken = accessToken;
+
+                return Ok(userRespose);
             }
             else
             {
-                return BadRequest();
+                return BadRequest("Invalid UserName or Password");
             }
         }
 

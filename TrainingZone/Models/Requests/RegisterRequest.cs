@@ -18,7 +18,7 @@ namespace TrainingZone.Models.Requests
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
-        [Compare("Password")]
+        [Compare(nameof(Password))]
         [DataType(DataType.Password)]
         public string ConfirmPassword { get; set; }
     }
