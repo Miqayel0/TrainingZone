@@ -18,7 +18,7 @@ namespace TrainingZone.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class ScoreController : ControllerBase
     {
         private readonly IScoreRepository _scoreRepository;
