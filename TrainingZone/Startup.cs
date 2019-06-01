@@ -18,6 +18,7 @@ using Swashbuckle.AspNetCore.Swagger;
 using TrainingZone.Core.Auth.Users;
 using TrainingZone.EFCore;
 using TrainingZone.EFCore.Auth;
+using TrainingZone.Hubs;
 using TrainingZone.MapProfile;
 
 namespace TrainingZone
@@ -45,8 +46,13 @@ namespace TrainingZone
             services.AddCors(options =>
             {
                 options.AddPolicy(MyAllowSpecificOrigins,
-                    builderr => builderr.WithOrigins("http://localhost:3000", "http://localhost:5001").AllowAnyOrigin());
+                    builderr => builderr.AllowAnyMethod()
+                                        .AllowAnyHeader()
+                                        .AllowCredentials()
+                                        .WithOrigins("http://localhost:3000"));
             });
+
+            services.AddSignalR();
             // jwt wire up
             // Get options from app settings
             var jwtAppSettingOptions = Configuration.GetSection(nameof(JwtIssuerOptions));
@@ -172,6 +178,10 @@ namespace TrainingZone
 
             app.UseAuthentication();
             app.UseHttpsRedirection();
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<Chat>("/chat");
+            });
             app.UseMvc();
         }
     }
