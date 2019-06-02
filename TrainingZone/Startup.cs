@@ -181,7 +181,7 @@ namespace TrainingZone
             app.UseHttpsRedirection();
             app.UseSignalR(routes =>
             {
-                routes.MapHub<Game>("/play");
+                routes.MapHub<GameHub>("/play");
             });
             app.UseMvc();
         }

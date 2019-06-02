@@ -10,10 +10,10 @@ using TrainingZone.Core.Interfaces;
 namespace TrainingZone.Hubs
 {
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public class Game : Hub
+    public class GameHub : Hub
     {
         private readonly IScoreRepository _scoreRepository;
-        public Game(IScoreRepository scoreRepository)
+        public GameHub(IScoreRepository scoreRepository)
         {
             _scoreRepository = scoreRepository;
         }
