@@ -16,10 +16,12 @@ namespace TrainingZone.EFCore
         }
 
         public virtual DbSet<Score> Scores { get; set; }
+        public virtual DbSet<Game> Games { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfiguration(new UserConfiguration());
             builder.ApplyConfiguration(new ScoreConfiguration());
+            builder.ApplyConfiguration(new GameConfiguration());
             base.OnModelCreating(builder);
             // Customize the ASP.NET Core Identity model and override the defaults if needed.
             // For example, you can rename the ASP.NET Core Identity table names and more.

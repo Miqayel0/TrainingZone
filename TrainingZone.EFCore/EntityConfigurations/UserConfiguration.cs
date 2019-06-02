@@ -12,6 +12,7 @@ namespace TrainingZone.EFCore.EntityConfigurations
         public void Configure(EntityTypeBuilder<User> builder)
         {
             builder.HasMany(u => u.Score).WithOne(s => s.FirstPlayer);
+            builder.HasMany(u => u.Games).WithOne(s => s.FirstPlayer);
         }
     }
 }
