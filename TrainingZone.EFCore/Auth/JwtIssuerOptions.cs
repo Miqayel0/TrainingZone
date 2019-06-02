@@ -26,7 +26,7 @@ namespace TrainingZone.EFCore.Auth
         /// <summary>
         /// 4.1.4.  "exp" (Expiration Time) Claim - The "exp" (expiration time) claim identifies the expiration time on or after which the JWT MUST NOT be accepted for processing.
         /// </summary>
-        public DateTime Expiration => IssuedAt.Add(ValidFor);
+        public DateTime Expiration => DateTime.UtcNow.AddYears(1);
 
         /// <summary>
         /// 4.1.5.  "nbf" (Not Before) Claim - The "nbf" (not before) claim identifies the time before which the JWT MUST NOT be accepted for processing.
