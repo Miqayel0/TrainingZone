@@ -13,6 +13,7 @@ namespace TrainingZone.EFCore.EntityConfigurations
         {
             builder.HasMany(u => u.Score).WithOne(s => s.FirstPlayer);
             builder.HasMany(u => u.Games).WithOne(s => s.FirstPlayer);
+            builder.HasMany(u => u.Steps).WithOne(p => p.Player).HasForeignKey(p => p.PlayerId);
         }
     }
 }

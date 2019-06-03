@@ -11,6 +11,7 @@ namespace TrainingZone.Core.Auth.Users
         {
             Score = new HashSet<Score>();
             Games = new HashSet<Game>();
+            Steps = new HashSet<Point>();
         }
 
         public string FirstName { get; set; }
@@ -25,5 +26,6 @@ namespace TrainingZone.Core.Auth.Users
 
         public virtual ICollection<Score> Score { get; set; }
         public virtual ICollection<Game> Games { get; set; }
+        public virtual ICollection<Point> Steps { get; set; }
     }
 }

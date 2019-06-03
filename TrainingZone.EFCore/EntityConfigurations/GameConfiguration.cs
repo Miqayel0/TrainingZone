@@ -14,6 +14,7 @@ namespace TrainingZone.EFCore.EntityConfigurations
             builder.HasKey(g => g.Id);
             builder.HasOne(g => g.FirstPlayer).WithMany(u => u.Games).HasForeignKey(g => g.FirstPlayerId).OnDelete(DeleteBehavior.SetNull);
             builder.HasOne(g => g.Score).WithOne(s => s.Game).HasForeignKey<Game>(g => g.ScoreId);
+            builder.HasMany(g => g.PlayedCoordinates);
         }
     }
 }
