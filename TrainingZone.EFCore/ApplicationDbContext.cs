@@ -9,7 +9,7 @@ using TrainingZone.EFCore.EntityConfigurations;
 namespace TrainingZone.EFCore
 {
     public class ApplicationDbContext : IdentityDbContext<User>
-    { 
+    {
         public ApplicationDbContext(DbContextOptions options)
               : base(options)
         {
@@ -17,6 +17,7 @@ namespace TrainingZone.EFCore
 
         public virtual DbSet<Score> Scores { get; set; }
         public virtual DbSet<Game> Games { get; set; }
+        public virtual DbSet<Point> Coordinates { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfiguration(new UserConfiguration());
