@@ -15,7 +15,7 @@ namespace TrainingZone.Controllers
     [ApiController]
     public class GameController : ControllerBase
     {
-        private readonly IGameRepository _scoreRepository
+        private readonly IGameRepository _gameRepository;
         private readonly IScoreRepository _scoreRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly UserManager<User> _userManager;
