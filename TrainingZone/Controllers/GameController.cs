@@ -7,7 +7,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TrainingZone.Core.Auth.Users;
+using TrainingZone.Core.Entities;
 using TrainingZone.Core.Interfaces;
+using TrainingZone.Models.Requests;
+using TrainingZone.Models.Response;
 
 namespace TrainingZone.Controllers
 {
@@ -28,24 +31,33 @@ namespace TrainingZone.Controllers
             _mapper = mapper;
         }
         // GET: api/Game
+
         [HttpGet]
-        public IEnumerable<string> Get()
+        public string[] Get()
         {
-            return new string[] { "value1", "value2" };
+            return new string[] { "value", "value2" };
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<GameResponse>> Get(int id)
+        {
+            // Todo
+            var game = await _gameRepository.GetById(id);
+            var gameResponse = _mapper.Map<GameResponse>(game);
+            return gameResponse;
         }
 
         // GET: api/Game/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
 
         // POST: api/Game
         [HttpPost]
-        public void Create([FromBody] CreateGameRequest request)
+        public async Task<ActionResult<CreateGameResponse>> Create([FromForm] CreateGameRequest request)
         {
+            var gameConfig = _mapper.Map<Game>(request);
+            await _gameRepository.Add(gameConfig);
+            await _unitOfWork.Complete();
 
+            return Ok(new CreateGameResponse { GameId = gameConfig.Id.ToString() });
         }
 
         // PUT: api/Game/5

@@ -32,6 +32,11 @@ namespace TrainingZone.MapProfile
                     FirstName = u.FirstName,
                     LastName = u.LastName
                 }).ForMember(au => au.Id, opt => opt.Ignore()).IgnoreAllSourcePropertiesWithAnInaccessibleSetter();
+            CreateMap<CreateGameRequest, Game>().IgnoreAllPropertiesWithAnInaccessibleSetter();
+            CreateMap<Game, GameResponse>().IgnoreAllPropertiesWithAnInaccessibleSetter();
+            CreateMap<Tuple<int,int>, Point>()
+                .ForMember(dest => dest.X, opt => opt.MapFrom(src => src.Item1))
+                .ForMember(dest => dest.Y, opt => opt.MapFrom(src => src.Item2));
         }
     }
 }
