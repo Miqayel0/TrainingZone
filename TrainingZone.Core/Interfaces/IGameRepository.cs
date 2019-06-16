@@ -9,7 +9,7 @@ namespace TrainingZone.Core.Interfaces
     public interface IGameRepository
     {
         Task<IEnumerable<Game>> Get();
-        Task<Game> GetById(int id);
+        Task<Game> GetById(string id);
         Task<IEnumerable<Game>> GetByPlayerId(string playerId);
         Task Add(Game score);
         Task Remove(Game score);

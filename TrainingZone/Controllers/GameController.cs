@@ -39,15 +39,12 @@ namespace TrainingZone.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<GameResponse>> Get(int id)
+        public async Task<ActionResult<GameResponse>> Get(string id)
         {
-            // Todo
             var game = await _gameRepository.GetById(id);
             var gameResponse = _mapper.Map<GameResponse>(game);
             return gameResponse;
         }
-
-        // GET: api/Game/5
 
         // POST: api/Game
         [HttpPost]
@@ -58,6 +55,37 @@ namespace TrainingZone.Controllers
             await _unitOfWork.Complete();
 
             return Ok(new CreateGameResponse { GameId = gameConfig.Id.ToString() });
+        }
+
+        [HttpPost]
+        [Route("attach-player")]
+        public async Task<ActionResult> AttachSecondPlayer([FromForm] AttachSecondPlayerToGameRequset requset)
+        {
+            var game = await _gameRepository.GetById(requset.GameId);
+            if(game == null)
+            {
+                return NotFound("Game not found");
+            }
+
+            string userId = (await _userManager.GetUserAsync(User)).Id;
+
+            if(userId == null)
+            {
+                return NotFound("Player not found");
+            }
+
+            game.SecondPlayerId = userId;
+
+            try
+            {
+                await _unitOfWork.Complete();
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.InnerException);
+            }
+
+            return Ok("Player Was Successful Attached");
         }
 
         // PUT: api/Game/5

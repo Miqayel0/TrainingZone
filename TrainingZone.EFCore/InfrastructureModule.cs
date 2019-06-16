@@ -16,6 +16,7 @@ namespace TrainingZone.EFCore
             builder.RegisterType<JwtFactory>().As<IJwtFactory>().SingleInstance();
             builder.RegisterType<ScoreRepository>().As<IScoreRepository>().InstancePerLifetimeScope();
             builder.RegisterType<UnitOfWork>().As<IUnitOfWork>().InstancePerLifetimeScope();
+            builder.RegisterType<GameRepository>().As<IGameRepository>().InstancePerLifetimeScope();
         }
     }
 }

@@ -28,9 +28,9 @@ namespace TrainingZone.EFCore.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<Game> GetById(int id)
+        public async Task<Game> GetById(string id)
         {
-            throw new NotImplementedException();
+            return await _context.Games.FindAsync(id);
         }
 
         public async Task<IEnumerable<Game>> GetByPlayerId(string playerId)

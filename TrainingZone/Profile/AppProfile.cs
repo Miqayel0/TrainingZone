@@ -32,7 +32,10 @@ namespace TrainingZone.MapProfile
                     FirstName = u.FirstName,
                     LastName = u.LastName
                 }).ForMember(au => au.Id, opt => opt.Ignore()).IgnoreAllSourcePropertiesWithAnInaccessibleSetter();
-            CreateMap<CreateGameRequest, Game>().IgnoreAllPropertiesWithAnInaccessibleSetter();
+            CreateMap<CreateGameRequest, Game>()
+                .ForMember(dest => dest.SecondPlayerTurnType,
+                            opt => opt.MapFrom(src => src.FirstPlayerTurnType == 'X' ? 'Y' : 'X'))
+                .IgnoreAllPropertiesWithAnInaccessibleSetter();
             CreateMap<Game, GameResponse>().IgnoreAllPropertiesWithAnInaccessibleSetter();
             CreateMap<Tuple<int,int>, Point>()
                 .ForMember(dest => dest.X, opt => opt.MapFrom(src => src.Item1))

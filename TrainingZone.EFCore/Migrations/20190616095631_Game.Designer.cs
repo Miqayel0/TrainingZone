@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TrainingZone.EFCore;
 
 namespace TrainingZone.EFCore.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190616095631_Game")]
+    partial class Game
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -195,6 +197,8 @@ namespace TrainingZone.EFCore.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int?>("FirstPlayedPlayer");
+
                     b.Property<string>("FirstPlayerId");
 
                     b.Property<string>("FirstPlayerTurnType")
@@ -216,8 +220,6 @@ namespace TrainingZone.EFCore.Migrations
                     b.Property<string>("SecondPlayerTurnType")
                         .IsRequired()
                         .HasConversion(new ValueConverter<string, string>(v => default(string), v => default(string), new ConverterMappingHints(size: 1)));
-
-                    b.Property<int?>("WhoIsStarts");
 
                     b.HasKey("Id");
 
