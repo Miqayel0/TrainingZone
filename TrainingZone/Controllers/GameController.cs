@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -16,6 +17,7 @@ namespace TrainingZone.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class GameController : ControllerBase
     {
         private readonly IGameRepository _gameRepository;
@@ -51,6 +53,15 @@ namespace TrainingZone.Controllers
         public async Task<ActionResult<CreateGameResponse>> Create([FromForm] CreateGameRequest request)
         {
             var gameConfig = _mapper.Map<Game>(request);
+            string userId = (await _userManager.GetUserAsync(User)).Id;
+
+            if (userId == null)
+            {
+                return NotFound("Player not found");
+            }
+
+            gameConfig.FirstPlayerId = userId;
+
             await _gameRepository.Add(gameConfig);
             await _unitOfWork.Complete();
 
@@ -61,7 +72,7 @@ namespace TrainingZone.Controllers
         [Route("attach-player")]
         public async Task<ActionResult> AttachSecondPlayer([FromForm] AttachSecondPlayerToGameRequset requset)
         {
-            var game = await _gameRepository.GetById(requset.GameId);
+            var game = await _gameRepository.GetById((requset.GameId));
             if(game == null)
             {
                 return NotFound("Game not found");
