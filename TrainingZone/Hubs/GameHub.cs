@@ -26,7 +26,7 @@ namespace TrainingZone.Hubs
         {
             var currentUserId = Context.UserIdentifier;
             var name = Context.User.Identity.Name;
-            await Clients.User(userId).SendAsync("sendToAll", name, message);
+            await Clients.User(currentUserId).SendAsync("sendToAll", name, message);
         }
     }
 }
