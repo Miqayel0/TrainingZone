@@ -85,6 +85,11 @@ namespace TrainingZone.Controllers
                 return NotFound("Player not found");
             }
 
+            if(game.SecondPlayerId != null)
+            {
+                return BadRequest("The player is already attached");
+            }
+
             game.SecondPlayerId = userId;
 
             try

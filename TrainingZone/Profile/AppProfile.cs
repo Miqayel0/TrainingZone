@@ -24,6 +24,8 @@ namespace TrainingZone.MapProfile
                             .IgnoreAllPropertiesWithAnInaccessibleSetter();
             CreateMap<User, ScoreResponse>().IgnoreAllPropertiesWithAnInaccessibleSetter();
             CreateMap<User, LoginResponse>();
+            CreateMap<User, UserResponse>().IgnoreAllSourcePropertiesWithAnInaccessibleSetter();
+            CreateMap<UpdateUserRequest, User>();
             CreateMap<RegisterRequest, User>()
                 .ConstructUsing(u => new User
                 {

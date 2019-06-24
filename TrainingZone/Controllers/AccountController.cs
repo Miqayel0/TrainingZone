@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TrainingZone.Core.Auth.Users;
 using TrainingZone.Models.Requests;
+using TrainingZone.Models.Response;
 
 namespace TrainingZone.Controllers
 {
@@ -28,6 +30,21 @@ namespace TrainingZone.Controllers
         public IEnumerable<string> Get()
         {
             return new string[] { "value1", "value2" };
+        }
+
+        [Authorize]
+        [HttpGet]
+        [Route("player")]
+        public async Task<ActionResult<UserResponse>> GetUser()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return NotFound("Player Not Found");
+            } 
+
+            var response = _mapper.Map<UserResponse>(user);
+            return Ok(response);
         }
 
         // GET: api/Account/5
@@ -53,9 +70,19 @@ namespace TrainingZone.Controllers
         }
 
         // PUT: api/Account/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPut]
+        [Authorize]
+        public async Task<ActionResult> Put([FromForm] UpdateUserRequest request)
         {
+            var user = await _userManager.GetUserAsync(User);
+            if(user == null)
+            {
+                return NotFound("Player Not Found");
+            }
+
+           _mapper.Map(request, user);
+            await _userManager.UpdateAsync(user);
+            return Ok(user);
         }
 
         // DELETE: api/ApiWithActions/5
