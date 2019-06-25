@@ -82,7 +82,8 @@ namespace TrainingZone.Controllers
 
            _mapper.Map(request, user);
             await _userManager.UpdateAsync(user);
-            return Ok(user);
+            var updatedUser = _mapper.Map<UserResponse>(user);
+            return Ok(updatedUser);
         }
 
         // DELETE: api/ApiWithActions/5

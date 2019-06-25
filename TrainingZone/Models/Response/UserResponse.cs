@@ -12,5 +12,6 @@ namespace TrainingZone.Models.Response
         public string LastName { get; set; }
         public string Email { get; set; }
         public string FullName => $"{FirstName} {LastName}";
+        public string FullNameShorthand => $"{FirstName.ToUpper()[0]}{LastName.ToUpper()[0]}";
     }
 }
