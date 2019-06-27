@@ -7,8 +7,7 @@ namespace TrainingZone.Models.Requests
 {
     public class ScoreRequest
     {
-        public string FirstPlayerId { get; set; }
-        public string SecondPlayerId { get; set; }
+        public string GameId { get; set; }
         public int? Winner { get; set; }
     }
 }

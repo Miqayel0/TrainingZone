@@ -22,40 +22,32 @@ namespace TrainingZone.Controllers
     public class ScoreController : ControllerBase
     {
         private readonly IScoreRepository _scoreRepository;
+        private readonly IGameRepository _gameRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly UserManager<User> _userManager;
         private readonly IMapper _mapper;
 
-        public ScoreController(UserManager<User> userManager, IScoreRepository scoreRepository, IUnitOfWork unitOfWork, IMapper mapper)
+        public ScoreController(UserManager<User> userManager, IScoreRepository scoreRepository, IUnitOfWork unitOfWork, IMapper mapper, IGameRepository gameRepository)
         {
             _scoreRepository = scoreRepository;
             _userManager = userManager;
+            _gameRepository = gameRepository;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-        // GET: api/Score
+
+        // GET By User: api/Score
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<ActionResult<ScoreResponse>> Get()
         {
-            return new string[] { "value1", "value2" };
-        }
+            var player = await _userManager.GetUserAsync(User);
 
-        // GET: api/Score/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<ScoreResponse>> Get(string id)
-        {
-            var scores = await _scoreRepository.GetByPlayerId(id);
-            var player = await _userManager.FindByIdAsync(id);
-
-            if(player is null)
+            if (player is null)
             {
                 return BadRequest("The player doesn't exist");
             }
 
-            if (!scores.IsAny())
-            {
-                return NotFound("Scores not found");
-            }
+            var scores = await _scoreRepository.GetByPlayerId(player.Id);
 
             var response = _mapper.Map<ScoreResponse>(player);
             response.ScoreHistory = _mapper.Map<IEnumerable<ScoreHistory>>(scores);
@@ -72,8 +64,8 @@ namespace TrainingZone.Controllers
                 return BadRequest();
             }
 
-            var firstPlayer = await _userManager.FindByIdAsync(requset.FirstPlayerId);
-            var secondPlayer = await _userManager.FindByIdAsync(requset.SecondPlayerId);
+            var firstPlayer = await _userManager.GetUserAsync(User);
+            var secondPlayer = (await _gameRepository.GetById(requset.GameId)).SecondPlayer;
 
             if (firstPlayer is null || secondPlayer is null)
             {
@@ -101,8 +93,8 @@ namespace TrainingZone.Controllers
             {
                 await _scoreRepository.Add(new Score
                 {
-                    FirstPlayerId = requset.FirstPlayerId,
-                    SecondPlayerId = requset.SecondPlayerId,
+                    FirstPlayerId = firstPlayer.Id,
+                    SecondPlayerId = secondPlayer.Id,
                     Winner = requset.Winner
                 });
             }
