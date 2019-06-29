@@ -10,7 +10,7 @@ namespace TrainingZone.Models.Response
 
         public int GamesCount { get; set; }
         public int Victories { get; set; }
-        public int Loses { get; set; }
+        public int Losses { get; set; }
 
         public IEnumerable<ScoreHistory> ScoreHistory { get; set; }
     }

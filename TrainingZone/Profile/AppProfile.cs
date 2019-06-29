@@ -15,8 +15,6 @@ namespace TrainingZone.MapProfile
         public AppProfile()
         {
             CreateMap<Score, ScoreHistory>()
-                .ForMember(dest => dest.FirstPlayerName,
-                            opt => opt.MapFrom(src => src.FirstPlayer.FirstName))
                     .ForMember(dest => dest.SecondPlayerName,
                             opt => opt.MapFrom(src => src.SecondPlayer.FirstName))
                         .ForMember(dest => dest.Win,

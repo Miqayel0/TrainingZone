@@ -7,7 +7,6 @@ namespace TrainingZone.Models.Response
 {
     public class ScoreHistory
     {
-        public string FirstPlayerName { get; set; }
         public string SecondPlayerName { get; set; }
         public bool Win { get; set; }
     }

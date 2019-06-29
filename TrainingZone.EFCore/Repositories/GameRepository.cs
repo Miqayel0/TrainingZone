@@ -30,7 +30,9 @@ namespace TrainingZone.EFCore.Repositories
 
         public async Task<Game> GetById(string id)
         {
-            return (await _context.Games.FindAsync(new Guid(id)));
+            return await _context.Games
+                .Include(i => i.SecondPlayer)
+                .FirstOrDefaultAsync(g => g.Id == new Guid(id));
         }
 
         public async Task<IEnumerable<Game>> GetByPlayerId(string playerId)
