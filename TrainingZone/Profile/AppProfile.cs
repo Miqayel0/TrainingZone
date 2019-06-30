@@ -15,10 +15,9 @@ namespace TrainingZone.MapProfile
         public AppProfile()
         {
             CreateMap<Score, ScoreHistory>()
-                    .ForMember(dest => dest.SecondPlayerName,
-                            opt => opt.MapFrom(src => src.SecondPlayer.FirstName))
-                        .ForMember(dest => dest.Win,
-                            opt => opt.MapFrom(src => !Convert.ToBoolean(src.Winner)))
+                    .ForMember(dest => dest.SecondPlayerName, opt => opt.MapFrom(src => src.SecondPlayer.FirstName))
+                    .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.CreatedAt))
+                    .ForMember(dest => dest.Result, opt => opt.MapFrom(src => src.Winner == 0 ? "Win" : "Lose"))
                             .IgnoreAllPropertiesWithAnInaccessibleSetter();
             CreateMap<User, ScoreResponse>().IgnoreAllPropertiesWithAnInaccessibleSetter();
             CreateMap<User, LoginResponse>();
@@ -37,7 +36,7 @@ namespace TrainingZone.MapProfile
                             opt => opt.MapFrom(src => src.FirstPlayerTurnType == 'X' ? 'Y' : 'X'))
                 .IgnoreAllPropertiesWithAnInaccessibleSetter();
             CreateMap<Game, GameResponse>().IgnoreAllPropertiesWithAnInaccessibleSetter();
-            CreateMap<Tuple<int,int>, Point>()
+            CreateMap<Tuple<int, int>, Point>()
                 .ForMember(dest => dest.X, opt => opt.MapFrom(src => src.Item1))
                 .ForMember(dest => dest.Y, opt => opt.MapFrom(src => src.Item2));
         }

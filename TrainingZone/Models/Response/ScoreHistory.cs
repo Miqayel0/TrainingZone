@@ -8,6 +8,7 @@ namespace TrainingZone.Models.Response
     public class ScoreHistory
     {
         public string SecondPlayerName { get; set; }
-        public bool Win { get; set; }
+        public DateTime Date { get; set; }
+        public string Result { get; set; }
     }
 }
