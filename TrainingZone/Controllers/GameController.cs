@@ -101,7 +101,7 @@ namespace TrainingZone.Controllers
                 return BadRequest(ex.InnerException);
             }
 
-            return Ok("Player Was Successful Attached");
+            return Ok(new CreateGameResponse { GameId = game.Id.ToString() });
         }
 
         // PUT: api/Game/5
