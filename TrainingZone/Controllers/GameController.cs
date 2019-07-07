@@ -78,19 +78,25 @@ namespace TrainingZone.Controllers
                 return NotFound("Game not found");
             }
 
-            string userId = (await _userManager.GetUserAsync(User)).Id;
+            if (game.IsGameFinished)
+            {
+                return BadRequest("You are trying to connect finished game");
+            }
 
-            if(userId == null)
+            if(game.SecondPlayerId != null && game.IsGameStarted)
+            {
+                return Ok(new CreateGameResponse { GameId = game.Id.ToString() });
+            }
+
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
             {
                 return NotFound("Player not found");
             }
 
-            if(game.SecondPlayerId != null)
-            {
-                return BadRequest("The player is already attached");
-            }
-
-            game.SecondPlayerId = userId;
+            game.SecondPlayerId = user.Id;
+            game.IsGameStarted = true;
 
             try
             {
