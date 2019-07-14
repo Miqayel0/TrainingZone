@@ -8,6 +8,6 @@ namespace TrainingZone.Models.Requests
     public class CreateGameRequest
     {
         public int MatrixSize { get; set; }
-        public int? WhoIsStarts { get; set; }
+        public int FirstPlayerTurn { get; set; }
     }
 }
