@@ -20,9 +20,11 @@ namespace TrainingZone.Core.Entities
         public virtual User FirstPlayer { get; set; }
         public virtual User SecondPlayer { get; set; }
         public int MatrixSize { get; set; }
-        public char FirstPlayerTurnType { get; set; }
-        public char SecondPlayerTurnType { get; set; }
-        public int? WhoIsStarts { get; set; }
+        /// <summary>
+        /// 1 = X, 2 = O
+        /// </summary>
+        public int FirstPlayerTurn { get; set; }
+        public int WhoHasStarted { get; set; }
         public bool IsGameStarted { get; set; }
         public bool IsGameFinished { get; set; }
         public virtual ICollection<Point> PlayedCoordinates { get; set; }

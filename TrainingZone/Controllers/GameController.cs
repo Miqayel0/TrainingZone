@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using TrainingZone.Core.Auth.Users;
 using TrainingZone.Core.Entities;
 using TrainingZone.Core.Interfaces;
+using TrainingZone.Models.Dtos;
 using TrainingZone.Models.Requests;
 using TrainingZone.Models.Response;
 
@@ -45,6 +46,8 @@ namespace TrainingZone.Controllers
         {
             var game = await _gameRepository.GetById(id);
             var gameResponse = _mapper.Map<GameResponse>(game);
+            gameResponse.Moves = PointToMoveDto(game.PlayedCoordinates, game.WhoHasStarted, game.FirstPlayerTurn);
+
             return gameResponse;
         }
 
@@ -73,7 +76,7 @@ namespace TrainingZone.Controllers
         public async Task<ActionResult> AttachSecondPlayer([FromForm] AttachSecondPlayerToGameRequset requset)
         {
             var game = await _gameRepository.GetById((requset.GameId));
-            if(game == null)
+            if (game == null)
             {
                 return NotFound("Game not found");
             }
@@ -83,7 +86,7 @@ namespace TrainingZone.Controllers
                 return BadRequest("You are trying to connect finished game");
             }
 
-            if(game.SecondPlayerId != null && game.IsGameStarted)
+            if (game.SecondPlayerId != null && game.IsGameStarted)
             {
                 return Ok(new CreateGameResponse { GameId = game.Id.ToString() });
             }
@@ -102,7 +105,7 @@ namespace TrainingZone.Controllers
             {
                 await _unitOfWork.Complete();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(ex.InnerException);
             }
@@ -120,6 +123,51 @@ namespace TrainingZone.Controllers
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+        }
+
+        private ICollection<MoveDto> PointToMoveDto(IEnumerable<Point> points, int whoHasStarted, int firstPlayerTurn)
+        {
+            var movies = new List<MoveDto>();
+            int player = 0;
+
+            switch (whoHasStarted)
+            {
+                case 1:
+                    player = firstPlayerTurn;
+                    break;
+                case 2:
+                    switch (firstPlayerTurn)
+                    {
+                        case 1:
+                            player = 2;
+                            break;
+                        case 2:
+                            player = 1;
+                            break;
+                    }
+                    break;
+                default:
+                    player = 1;
+                    break;
+            }
+
+            foreach (var point in points)
+            {
+                var move = new MoveDto { Player = player, Row = point.X, column = point.Y };
+                switch (player)
+                {
+                    case 1:
+                        player = 2;
+                        break;
+                    case 2:
+                        player = 1;
+                        break;
+                }
+
+                movies.Add(move);
+            }
+
+            return movies;
         }
     }
 }

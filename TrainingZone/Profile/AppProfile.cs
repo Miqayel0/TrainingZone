@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using TrainingZone.Core.Auth.Users;
 using TrainingZone.Core.Entities;
+using TrainingZone.Models.Dtos;
 using TrainingZone.Models.Requests;
 using TrainingZone.Models.Response;
 
@@ -14,7 +11,7 @@ namespace TrainingZone.MapProfile
     {
         public AppProfile()
         {
-            CreateMap<Score, ScoreHistory>()
+            CreateMap<Score, ScoreHistoryDto>()
                     .ForMember(dest => dest.SecondPlayerName, opt => opt.MapFrom(src => src.SecondPlayer.FirstName))
                     .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.CreatedAt))
                     .ForMember(dest => dest.Result, opt => opt.MapFrom(src => src.Winner == 0 ? "Win" : "Lose"))
@@ -32,13 +29,9 @@ namespace TrainingZone.MapProfile
                     LastName = u.LastName
                 }).ForMember(au => au.Id, opt => opt.Ignore()).IgnoreAllSourcePropertiesWithAnInaccessibleSetter();
             CreateMap<CreateGameRequest, Game>()
-                .ForMember(dest => dest.SecondPlayerTurnType,
-                            opt => opt.MapFrom(src => src.FirstPlayerTurnType == 'X' ? 'Y' : 'X'))
                 .IgnoreAllPropertiesWithAnInaccessibleSetter();
             CreateMap<Game, GameResponse>().IgnoreAllPropertiesWithAnInaccessibleSetter();
-            CreateMap<Tuple<int, int>, Point>()
-                .ForMember(dest => dest.X, opt => opt.MapFrom(src => src.Item1))
-                .ForMember(dest => dest.Y, opt => opt.MapFrom(src => src.Item2));
+           // CreateMap<Point, MoveDto>().ForMember(d => d.Player, opt => opt.MapFrom((src, dest, destMember, context) => context.Items["Player"]));
         }
     }
 }

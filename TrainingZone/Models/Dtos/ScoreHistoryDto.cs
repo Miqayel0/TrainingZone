@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace TrainingZone.Models.Response
+namespace TrainingZone.Models.Dtos
 {
-    public class ScoreHistory
+    public class ScoreHistoryDto
     {
         public string SecondPlayerName { get; set; }
         public DateTime Date { get; set; }

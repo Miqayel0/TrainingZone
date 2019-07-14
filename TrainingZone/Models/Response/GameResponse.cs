@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using TrainingZone.Models.Dtos;
 
 namespace TrainingZone.Models.Response
 {
@@ -12,12 +13,9 @@ namespace TrainingZone.Models.Response
         public string FirstPlayerId { get; set; }
         public string SecondPlayerId { get; set; }
         public int MatrixSize { get; set; }
-        public char FirstPlayerTurnType { get; set; }
-        public char SecondPlayerTurnType { get; set; }
-        public int? FirstPlayedPlayer { get; set; }
+        public int FirstPlayerTurn { get; set; }
         public bool IsGameStarted { get; set; }
         public bool IsGameFinished { get; set; }
-
-        public ICollection<(int X, int Y)> PlayedCoordinates { get; set; }
+        public ICollection<MoveDto> Moves { get; set; }
     }
 }

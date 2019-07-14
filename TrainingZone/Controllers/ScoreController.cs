@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using TrainingZone.Core.Auth.Users;
 using TrainingZone.Core.Entities;
 using TrainingZone.Core.Interfaces;
+using TrainingZone.Models.Dtos;
 using TrainingZone.Models.Requests;
 using TrainingZone.Models.Response;
 using TrainingZone.Utils;
@@ -50,7 +51,7 @@ namespace TrainingZone.Controllers
             var scores = await _scoreRepository.GetByPlayerId(player.Id);
 
             var response = _mapper.Map<ScoreResponse>(player);
-            response.ScoreHistory = _mapper.Map<IEnumerable<ScoreHistory>>(scores);
+            response.ScoreHistory = _mapper.Map<IEnumerable<ScoreHistoryDto>>(scores);
 
             return Ok(response);
         }

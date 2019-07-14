@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TrainingZone.Models.Dtos;
 
 namespace TrainingZone.Models.Response
 {
@@ -12,6 +13,6 @@ namespace TrainingZone.Models.Response
         public int Victories { get; set; }
         public int Losses { get; set; }
 
-        public IEnumerable<ScoreHistory> ScoreHistory { get; set; }
+        public IEnumerable<ScoreHistoryDto> ScoreHistory { get; set; }
     }
 }

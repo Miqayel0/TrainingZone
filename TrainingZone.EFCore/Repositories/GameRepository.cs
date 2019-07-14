@@ -32,6 +32,7 @@ namespace TrainingZone.EFCore.Repositories
         {
             return await _context.Games
                 .Include(i => i.SecondPlayer)
+                .Include(i => i.PlayedCoordinates)
                 .FirstOrDefaultAsync(g => g.Id == new Guid(id));
         }
 
