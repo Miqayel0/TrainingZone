@@ -45,10 +45,40 @@ namespace TrainingZone.Controllers
         public async Task<ActionResult<GameResponse>> Get(string id)
         {
             var game = await _gameRepository.GetById(id);
+            if (game == null)
+            {
+                return BadRequest("Game is not exist");
+            }
+
             var gameResponse = _mapper.Map<GameResponse>(game);
-            gameResponse.Moves = PointToMoveDto(game.PlayedCoordinates, game.WhoHasStarted, game.FirstPlayerTurn);
+            gameResponse.Moves = _mapper.Map<ICollection<MoveDto>>(game.PlayedCoordinates);
 
             return gameResponse;
+        }
+
+        [Route("player-number/{gameId}")]
+        public async Task<ActionResult<GameResponse>> GetPlayerNumber(string gameId)
+        {
+            const int firstPlayerNum = 1;
+            const int secondPlayerNum = 2;
+            var game = await _gameRepository.GetById(gameId);
+            var user = await _userManager.GetUserAsync(User);
+
+            if (game is null || user is null)
+            {
+                return BadRequest();
+            }
+
+            if (game.FirstPlayerId == user.Id)
+            {
+                return Ok(new PlayerNumberResponse { Player = firstPlayerNum });
+            }
+            else if (game.SecondPlayerId == user.Id)
+            {
+                return Ok(new PlayerNumberResponse { Player = secondPlayerNum });
+            }
+
+            return BadRequest();
         }
 
         // POST: api/Game
@@ -56,14 +86,27 @@ namespace TrainingZone.Controllers
         public async Task<ActionResult<CreateGameResponse>> Create([FromForm] CreateGameRequest request)
         {
             var gameConfig = _mapper.Map<Game>(request);
-            string userId = (await _userManager.GetUserAsync(User)).Id;
+            var user = await _userManager.GetUserAsync(User);
 
-            if (userId == null)
+            if (user == null)
             {
                 return NotFound("Player not found");
             }
 
-            gameConfig.FirstPlayerId = userId;
+            switch (request.FirstPlayerTurn)
+            {
+                case 1:
+                    gameConfig.SecondPlayerTurn = 2; // O
+                    break;
+                case 2:
+                    gameConfig.SecondPlayerTurn = 1; // X
+                    break;
+                default:
+                    return BadRequest("Player turn not selected");
+            }
+
+            gameConfig.FirstPlayerId = user.Id;
+            gameConfig.FirstPlayerTurn = request.FirstPlayerTurn;
 
             await _gameRepository.Add(gameConfig);
             await _unitOfWork.Complete();
@@ -123,51 +166,6 @@ namespace TrainingZone.Controllers
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-        }
-
-        private ICollection<MoveDto> PointToMoveDto(IEnumerable<Point> points, int whoHasStarted, int firstPlayerTurn)
-        {
-            var movies = new List<MoveDto>();
-            int player = 0;
-
-            switch (whoHasStarted)
-            {
-                case 1:
-                    player = firstPlayerTurn;
-                    break;
-                case 2:
-                    switch (firstPlayerTurn)
-                    {
-                        case 1:
-                            player = 2;
-                            break;
-                        case 2:
-                            player = 1;
-                            break;
-                    }
-                    break;
-                default:
-                    player = 1;
-                    break;
-            }
-
-            foreach (var point in points)
-            {
-                var move = new MoveDto { Player = player, Row = point.X, column = point.Y };
-                switch (player)
-                {
-                    case 1:
-                        player = 2;
-                        break;
-                    case 2:
-                        player = 1;
-                        break;
-                }
-
-                movies.Add(move);
-            }
-
-            return movies;
         }
     }
 }

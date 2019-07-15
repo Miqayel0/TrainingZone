@@ -122,7 +122,7 @@ namespace TrainingZone
             {
                 c.SwaggerDoc("v1.0", new Info { Title = "Main API v1.0", Version = "v1.0" });
 
-                // Swagger 2.+ support
+                //Swagger 2.+ support
                 var security = new Dictionary<string, IEnumerable<string>>
                 {
                     {"Bearer", new string[] { }},
@@ -138,11 +138,11 @@ namespace TrainingZone
                 c.AddSecurityRequirement(security);
             });
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new Info { Title = "TrainingZone API", Version = "v1" });
-            });
+            //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            //services.AddSwaggerGen(c =>
+            //{
+            //    c.SwaggerDoc("v1", new Info { Title = "TrainingZone API", Version = "v1" });
+            //});
 
             var builder = new ContainerBuilder();
 

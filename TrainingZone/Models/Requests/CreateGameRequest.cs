@@ -9,5 +9,6 @@ namespace TrainingZone.Models.Requests
     {
         public int MatrixSize { get; set; }
         public int FirstPlayerTurn { get; set; }
+        public int SecondPlayerTurn { get; set; }
     }
 }

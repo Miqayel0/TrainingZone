@@ -13,8 +13,12 @@ namespace TrainingZone.Core.Entities
         }
 
         public int Id { get; set; }
-        public int X { get; set; }
-        public int Y { get; set; }
+        public int CoordinateX { get; set; }
+        public int CoordinateY { get; set; }
+        /// <summary>
+        /// Value can be 1 or 2 (X, O)
+        /// </summary>
+        public int Value { get; set; }
         public string PlayerId { get; set; }
         public User Player { get; set; }
         public virtual ICollection<Game> Games { get; set; }

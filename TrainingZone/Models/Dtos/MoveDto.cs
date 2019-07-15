@@ -10,10 +10,10 @@ namespace TrainingZone.Models.Dtos
         /// <summary>
         /// The values can be 1 or 2
         /// </summary>
-        public int Player { get; set; }
+        public int Value { get; set; }
 
         public int Row { get; set; }
 
-        public int column { get; set; }
+        public int Col { get; set; }
     }
 }

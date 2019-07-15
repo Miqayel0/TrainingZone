@@ -25,7 +25,7 @@ namespace TrainingZone.Hubs
             _unitOfWork = unitOfWork;
         }
 
-        public async Task GetMove(string gameId, int turn, int row, int col, int player)
+        public async Task GetMove(string gameId, int value, int row, int col, int player)
         {
             var game = await _gameRepository.GetById(gameId);
             string observerId;
@@ -44,11 +44,10 @@ namespace TrainingZone.Hubs
                 observerId = game.FirstPlayerId;
             }
 
-            game.WhoHasStarted = player;
-            game.PlayedCoordinates.Add(new Core.Entities.Point { PlayerId = observerId, X = row, Y = col });
+            game.PlayedCoordinates.Add(new Core.Entities.Point { PlayerId = observerId, Value = value , CoordinateX = row, CoordinateY = col });
             await _unitOfWork.Complete();
             //var currentUserId = Context.UserIdentifier;
-            await Clients.User(observerId).SendAsync("sendToPlayer", turn, row, col);
+            await Clients.User(observerId).SendAsync("sendToPlayer", value, row, col);
         }
 
 

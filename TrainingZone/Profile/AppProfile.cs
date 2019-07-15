@@ -31,7 +31,10 @@ namespace TrainingZone.MapProfile
             CreateMap<CreateGameRequest, Game>()
                 .IgnoreAllPropertiesWithAnInaccessibleSetter();
             CreateMap<Game, GameResponse>().IgnoreAllPropertiesWithAnInaccessibleSetter();
-           // CreateMap<Point, MoveDto>().ForMember(d => d.Player, opt => opt.MapFrom((src, dest, destMember, context) => context.Items["Player"]));
+            CreateMap<Point, MoveDto>()
+                .ForMember(dest => dest.Value, opt => opt.MapFrom(src => src.Value))
+                .ForMember(dest => dest.Row, opt => opt.MapFrom(src => src.CoordinateX))
+                .ForMember(dest => dest.Col, opt => opt.MapFrom(src => src.CoordinateY));
         }
     }
 }
