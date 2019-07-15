@@ -108,8 +108,6 @@ namespace TrainingZone
             identityBuilder = new IdentityBuilder(identityBuilder.UserType, typeof(IdentityRole), identityBuilder.Services);
             identityBuilder.AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1).AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>());
-
             var mappingConfig = new MapperConfiguration(mc =>
             {
                 mc.AddProfile(new AppProfile());
@@ -118,11 +116,12 @@ namespace TrainingZone
             var mapper = mappingConfig.CreateMapper();
             services.AddSingleton(mapper);
 
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1.0", new Info { Title = "Main API v1.0", Version = "v1.0" });
+                c.SwaggerDoc("v1", new Info { Title = "TrainingZone API", Version = "v1" });
 
-                //Swagger 2.+ support
                 var security = new Dictionary<string, IEnumerable<string>>
                 {
                     {"Bearer", new string[] { }},
@@ -137,12 +136,6 @@ namespace TrainingZone
                 });
                 c.AddSecurityRequirement(security);
             });
-
-            //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            //services.AddSwaggerGen(c =>
-            //{
-            //    c.SwaggerDoc("v1", new Info { Title = "TrainingZone API", Version = "v1" });
-            //});
 
             var builder = new ContainerBuilder();
 
@@ -167,9 +160,12 @@ namespace TrainingZone
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            app.UseCors(MyAllowSpecificOrigins);
+
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
-            app.UseCors(MyAllowSpecificOrigins);
+
             // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), 
             // specifying the Swagger JSON endpoint.
             app.UseSwaggerUI(c =>

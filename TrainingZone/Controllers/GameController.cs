@@ -56,6 +56,7 @@ namespace TrainingZone.Controllers
             return gameResponse;
         }
 
+        [HttpGet]
         [Route("player-number/{gameId}")]
         public async Task<ActionResult<GameResponse>> GetPlayerNumber(string gameId)
         {
