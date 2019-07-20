@@ -24,6 +24,7 @@ namespace TrainingZone.Core.Entities
         /// 1 = CoordinateX, 2 = O
         /// </summary>
         public int FirstPlayerTurn { get; set; }
+        public int CurrentTurn { get; set; }
         public int SecondPlayerTurn { get; set; }
         public bool IsGameStarted { get; set; }
         public bool IsGameFinished { get; set; }

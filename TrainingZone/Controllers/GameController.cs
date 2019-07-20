@@ -98,9 +98,11 @@ namespace TrainingZone.Controllers
             {
                 case 1:
                     gameConfig.SecondPlayerTurn = 2; // O
+                    gameConfig.CurrentTurn = 1;
                     break;
                 case 2:
                     gameConfig.SecondPlayerTurn = 1; // X
+                    gameConfig.CurrentTurn = 2;
                     break;
                 default:
                     return BadRequest("Player turn not selected");

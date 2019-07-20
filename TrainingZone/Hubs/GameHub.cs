@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TrainingZone.Core.Auth.Users;
+using TrainingZone.Core.Entities;
 using TrainingZone.Core.Interfaces;
 
 namespace TrainingZone.Hubs
@@ -25,31 +26,53 @@ namespace TrainingZone.Hubs
             _unitOfWork = unitOfWork;
         }
 
-        public async Task GetMove(string gameId, int value, int row, int col, int player)
+        public async Task GetMove(string gameId, int value, int row, int col)
         {
             var game = await _gameRepository.GetById(gameId);
+            var currentUserId = Context.UserIdentifier;
+            int player = 0;
             string observerId;
 
             if (game.IsGameFinished || !game.IsGameStarted)
             {
-                throw new Exception("Bad Request");
+                throw new Exception();
             }
 
-            if (player == 1)
+            if (currentUserId == game.FirstPlayerId)
             {
-                observerId = game.SecondPlayerId;
+                player = 1;
             }
-            else
+            else if (currentUserId == game.SecondPlayerId)
             {
-                observerId = game.FirstPlayerId;
+                player = 2;
             }
 
-            game.PlayedCoordinates.Add(new Core.Entities.Point { PlayerId = observerId, Value = value , CoordinateX = row, CoordinateY = col });
+            switch (player)
+            {
+                case 1:
+                    observerId = game.SecondPlayerId;
+                    game.CurrentTurn = 2;
+                    break;
+
+                case 2:
+                    observerId = game.FirstPlayerId;
+                    game.CurrentTurn = 1;
+                    break;
+                default:
+                    throw new UnauthorizedAccessException();
+            }
+
+            game.PlayedCoordinates.Add(new Point
+            {
+                PlayerId = observerId,
+                Value = value,
+                CoordinateX = row,
+                CoordinateY = col
+            });
+
             await _unitOfWork.Complete();
-            //var currentUserId = Context.UserIdentifier;
             await Clients.User(observerId).SendAsync("sendToPlayer", value, row, col);
         }
-
 
     }
 }

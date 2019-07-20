@@ -15,6 +15,7 @@ namespace TrainingZone.Models.Response
         public int MatrixSize { get; set; }
         public int FirstPlayerTurn { get; set; }
         public int SecondPlayerTurn { get; set; }
+        public int CurrentTurn { get; set; }
         public bool IsGameStarted { get; set; }
         public bool IsGameFinished { get; set; }
         public ICollection<MoveDto> Moves { get; set; }

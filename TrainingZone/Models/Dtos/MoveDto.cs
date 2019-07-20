@@ -15,5 +15,6 @@ namespace TrainingZone.Models.Dtos
         public int Row { get; set; }
 
         public int Col { get; set; }
+
     }
 }
